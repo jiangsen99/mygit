@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--
+        使用注解的方式进行ioc和依赖注入
+        1. 添加一个约束信息
+        2. 添加包扫描(因为我们的注解是写在类上的，所以要扫描包里面的类，才能加载类上的注解)
+        3. 要让spring容器创建和管理哪个对象，那么就给哪个类添加Component注解
+           如果这个类使我们自己写的类，那么我们就可以使用注解的方式进行IOC
+           但是如果这个类是第三方框架的类，那么我们就无法使用注解的方式进行IOC，只能使用配置文件
+
+       使用注解的方式进行依赖注入:
+       给要注入的属性，添加Autowired注解
+    -->
+
+    <!--包扫描-->
+    <context:component-scan base-package="com.itheima"/>
+
+
+    <bean id="queryRunner" class="org.apache.commons.dbutils.QueryRunner">
+        <constructor-arg name="ds" ref="dataSource"/>
+    </bean>
+
+    <!--使用静态工厂的方式创建连接池对象-->
+    <bean id="dataSource" class="com.itheima.utils.JDBCUtil" factory-method="getDataSource"></bean>
+</beans>

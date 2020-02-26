@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="demo01" />
+        <module name="demo02" />
+        <module name="demo03" />
+        <module name="spring_01" />
+        <module name="spring_aop" />
+        <module name="spring_aop_08" />
+        <module name="spring_aop_09" />
+        <module name="spring_aop_anno_11" />
+        <module name="spring_crud_04" />
+        <module name="spring_crud_annotation_05" />
+        <module name="spring_crud_annotation_06" />
+        <module name="spring_di_03" />
+        <module name="spring_fanally" />
+        <module name="spring_ioc_02" />
+        <module name="spring_jdbc_12" />
+        <module name="spring_transfer_07" />
+        <module name="spring_transfer_10" />
+        <module name="spring_transfer_13" />
+        <module name="spring_transfer_14" />
+        <module name="spring_transfer_all" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="demo01" target="1.8" />
+      <module name="demo02" target="1.8" />
+      <module name="demo03" target="1.8" />
+      <module name="spring_01" target="1.8" />
+      <module name="spring_aop" target="1.8" />
+      <module name="spring_aop_08" target="1.8" />
+      <module name="spring_aop_09" target="1.8" />
+      <module name="spring_aop_anno_11" target="1.8" />
+      <module name="spring_crud_04" target="1.8" />
+      <module name="spring_crud_annotation_05" target="1.8" />
+      <module name="spring_crud_annotation_06" target="1.8" />
+      <module name="spring_di_03" target="1.8" />
+      <module name="spring_fanally" target="1.8" />
+      <module name="spring_ioc_02" target="1.8" />
+      <module name="spring_jdbc_12" target="1.8" />
+      <module name="spring_transfer_07" target="1.8" />
+      <module name="spring_transfer_10" target="1.8" />
+      <module name="spring_transfer_13" target="1.8" />
+      <module name="spring_transfer_14" target="1.8" />
+      <module name="spring_transfer_all" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

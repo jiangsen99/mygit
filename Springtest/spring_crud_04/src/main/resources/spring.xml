@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+        首先分析ioc，也就是要让spring核心容器创建管理哪些对象
+        1. AccountController
+        2. AccountServiceImpl
+        3. AccountDaoImpl对象
+        4. QueryRunner对象
+        5. 连接池对象(调用JDBCUtil里面的一个静态方法getDataSource()创建)
+
+        接下来分析依赖注入:
+            1. AccountController中要注入AccountService的实现类对象(set方法)
+            2. AccountServiceImpl中要注入AccountDao的实现类对象(set方法)
+            3. AccountDaoImpl中要注入QueryRunner对象(set方法)
+            4. QueryRunner中要注入连接池对象(构造函数)
+    -->
+    <bean id="accountController" class="com.itheima.controller.AccountController">
+        <property name="accountService" ref="accountService"/>
+    </bean>
+
+    <bean id="accountService" class="com.itheima.service.AccountServiceImpl">
+        <property name="accountDao" ref="accountDao"/>
+    </bean>
+
+    <bean id="accountDao" class="com.itheima.dao.AccountDaoImpl">
+        <property name="queryRunner" ref="queryRunner"/>
+    </bean>
+
+    <bean id="queryRunner" class="org.apache.commons.dbutils.QueryRunner">
+        <constructor-arg name="ds" ref="dataSource"/>
+    </bean>
+
+    <!--使用静态工厂的方式创建连接池对象-->
+    <bean id="dataSource" class="com.itheima.utils.JDBCUtil" factory-method="getDataSource"></bean>
+</beans>

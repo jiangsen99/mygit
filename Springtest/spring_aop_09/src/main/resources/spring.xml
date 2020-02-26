@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--包扫描-->
+    <context:component-scan base-package="com.itheima"/>
+
+    <!--首先使用配置文件的方式进行AOP-->
+    <!--1.将切面，配置到核心容器中-->
+    <bean id="myAspect" class="com.itheima.MyAspect"></bean>
+
+    <!--2. 定义aop的配置-->
+    <aop:config>
+        <!--
+            2.1 定义切入点:要被增强的方法(add方法)
+                id:就表示切入点的唯一标识
+                expression:就是切入点表达式，通过这个表达式我们可以定义切入点
+                切入点表达式有四部分构成:
+                    1. 返回值类型,如果为* 表示任意返回值
+                    2. 类的全限定名,如果为* 表示任意类
+                    3. 方法名，如果为* 表示当前类的所有方法
+                    4. 方法的参数类型 如果为* 表示任意参数类型(但是必须有参数)；如果为.. 表示可以是任意类型参数也可以没有参数
+        -->
+        <aop:pointcut id="pt1" expression="execution(* com.itheima.service.impl.UserServiceImpl.add(..))"/>
+
+        <!--
+            添加一个切入点，delete方法
+        -->
+        <aop:pointcut id="pt2" expression="execution(* com.itheima.service.impl.UserServiceImpl.delete(..))"/>
+
+        <!--
+            添加一个切入点，UserServiceImpl类中的所有方法
+        -->
+        <aop:pointcut id="pt3" expression="execution(* com.itheima.service.impl.UserServiceImpl.*(..))"/>
+
+        <!--
+            添加一个切入点，UserServiceImpl类中的 findAll()方法
+        -->
+        <aop:pointcut id="pt4" expression="execution(* com.itheima.service.impl.UserServiceImpl.findAll(..))"/>
+
+        <!--
+            2.2 定义一个切面，关联切入点和通知
+                ref引入切面对象的id，也就是说哪个对象作为切面
+
+                在切面里面配置通知:
+                    1. 前置通知
+                    2. 后置通知
+                    3. 异常通知
+                    4. 最终通知
+                    5. 环绕通知
+        -->
+        <aop:aspect ref="myAspect">
+            <!--
+                使用前置通知，在切入点之前进行增强
+                method表示要插入到切入点之前的那个方法(也就是作为前置通知的方法)
+
+                pointcut-ref:引入切入点，将这个通知插入到哪个切入点之前
+            -->
+            <aop:before method="security" pointcut-ref="pt1"></aop:before>
+
+            <!--
+                配置一个后置通知<aop:after-returning>这个通知也就是执行完切入点方法后，返回值之后再执行通知
+            -->
+            <aop:after-returning method="printLog" pointcut-ref="pt2"></aop:after-returning>
+
+            <!--
+                配置一个异常通知:异常通知是切入点抛出异常的时候执行
+                异常通知和后置通知不会一起执行，如果出现异常则执行异常通知，如果不出现异常则执行后置通知
+            -->
+            <aop:after-throwing method="rollback" pointcut-ref="pt3"></aop:after-throwing>
+
+            <!--
+                配置一个最终通知
+            -->
+            <aop:after method="sayHello" pointcut-ref="pt2"></aop:after>
+
+            <!--
+                配置环绕通知
+            -->
+            <aop:around method="showTime" pointcut-ref="pt4"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

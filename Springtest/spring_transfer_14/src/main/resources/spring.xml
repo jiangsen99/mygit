@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd 
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--
+        1. 包扫描
+    -->
+    <context:component-scan base-package="com.itheima"/>
+
+    <!--配置JdbcTemplate-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+
+    <!--引入外部属性文件-->
+    <context:property-placeholder location="classpath:druid.properties"/>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <!--注入username、password、url、driverClassName等等值-->
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+    </bean>
+
+    <!--
+        采用注解的方式进行声明式事务的配置:
+            1. 配置事务管理者
+            2. 加载事务注解驱动
+            3. 哪个方法要使用事务，则在哪个方法上添加Transactional注解就OK了
+    -->
+
+    <!--配置事务管理者-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--
+            要在事务管理者中，注入数据源对象
+        -->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--加载事务注解驱动-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd 
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--
+        1. 包扫描
+    -->
+    <context:component-scan base-package="com.itheima"/>
+    <!--
+        IOC:
+            AccountController
+            AccountServiceImpl
+            AccountDaoImpl
+                QueryRunner
+                连接池对象
+    -->
+    <!--
+        使用配置文件的方式进行ioc，将queryRunner对象，以及连接池对象配置到spring的
+        核心容器
+    -->
+    <bean id="queryRunner" class="org.apache.commons.dbutils.QueryRunner">
+        <!--通过构造函数，注入连接池对象-->
+        <constructor-arg name="ds" ref="dataSource"/>
+    </bean>
+
+
+    <!--引入外部属性文件-->
+    <context:property-placeholder location="classpath:druid.properties"/>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <!--注入username、password、url、driverClassName等等值-->
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+    </bean>
+
+    <bean id="threadLocal" class="java.lang.ThreadLocal"></bean>
+
+    <!--配置实例工厂对象-->
+    <bean id="connectionUtil" class="com.itheima.utils.ConnectionUtil"></bean>
+
+    <!--将切面的对象配置到spring的核心容器-->
+    <bean id="transactionAspect" class="com.itheima.TransactionAspect"></bean>
+    
+    <!--进行aop的配置-->
+    <aop:config>
+        <!--配置切入点-->
+        <aop:pointcut id="pt1" expression="execution(* com.itheima.service.impl.AccountServiceImpl.transfer(..))"/>
+
+        <!--配置切面-->
+        <aop:aspect ref="transactionAspect">
+            <!--配置环绕通知-->
+            <aop:around method="addTransaction" pointcut-ref="pt1"></aop:around>
+        </aop:aspect>
+    </aop:config>
+</beans>

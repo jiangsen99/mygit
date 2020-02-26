@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="ES6" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/../demo02/pom.xml" />
+        <option value="$PROJECT_DIR$/../demo03/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_01/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_aop/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_aop_08/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_aop_09/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_aop_anno_11/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_crud_04/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_crud_annotation_05/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_crud_annotation_06/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_di_03/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_fanally/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_ioc_02/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_jdbc_12/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_transfer_07/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_transfer_10/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_transfer_13/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_transfer_14/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring_transfer_all/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/classes" />
+  </component>
+</project>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/beans/spring-context.xsd">
+    <!--
+        我们需要使用ioc，创建一些对象:
+            UserController 、UserServiceImpl、UserDaoImpl
+
+        我们还需要使用依赖注入，给我们的类的成员变量赋值
+            UserController中的 UserService成员变量
+
+            UserServiceImpl中的 UserDao成员变量
+
+        进行依赖注入的方式有两种:
+            1. 调用set方法
+               property标签中的name，表示要赋值的属性
+               property标签中的value或者是ref，表示要赋值给哪个属性的内容
+                 1. 如果属性是简单类型，则使用value
+                 2. 如果属性是bean类型，则使用ref,指定要赋的值的id
+    -->
+    <bean id="userController" class="com.itheima.controller.UserController">
+        <!--<property name="username" value="张三疯"/>
+        <property name="userService" ref="userService"/>-->
+
+        <!--
+            使用构造函数的方式进行依赖注入，那么我们就要使用constructor-arg标签
+        -->
+        <constructor-arg name="username" value="奥巴马"/>
+        <constructor-arg name="userService" ref="userService"/>
+        <!--
+            注入数组类型的数据
+        -->
+        <constructor-arg name="hobbies">
+            <array>
+                <value>篮球</value>
+                <value>足球</value>
+                <value>乒乓球</value>
+            </array>
+        </constructor-arg>
+
+        <!--
+            注入map类型的数据
+        -->
+        <constructor-arg name="map">
+            <map>
+                <entry key="aaa1" value="bbb1"/>
+                <entry key="aaa2" value="bbb2"/>
+                <entry key="aaa3" value="bbb3"/>
+                <entry key="aaa4" value="bbb4"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!--
+        使用p命名空间进行注入(还得引入p命名空间对应的约束文件)
+            简单类型，p:属性名="属性值"
+            对象类型，p:属性名-ref="要赋值的id"
+        要求是，如果在别人的代码中，看到了知道是什么意思就行了
+    -->
+    <bean id="userService" class="com.itheima.service.UserServiceImpl" p:userDao-ref="userDao">
+
+        <!--<property name="userDao" ref="userDao"/>-->
+    </bean>
+
+    <bean id="userDao" class="com.itheima.dao.UserDaoImpl">
+        <property name="name" value="张三"/>
+    </bean>
+
+
+</beans>

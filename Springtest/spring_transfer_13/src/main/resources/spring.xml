@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd 
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--
+        1. 包扫描
+    -->
+    <context:component-scan base-package="com.itheima"/>
+
+    <!--配置JdbcTemplate-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+
+    <!--引入外部属性文件-->
+    <context:property-placeholder location="classpath:druid.properties"/>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <!--注入username、password、url、driverClassName等等值-->
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+    </bean>
+
+    <!--
+        采用配置文件的方式进行声明式事务的配置
+            1. 将事务管理者DataSourceTransactionManager配置到spring的核心容器中
+            2. 配置事务规则
+            3. 进行aop配置，配置事务通知
+    -->
+
+    <!--配置事务管理者-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--
+            要在事务管理者中，注入数据源对象
+        -->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--
+        配置事务规则
+    -->
+    <tx:advice id="ad1" transaction-manager="transactionManager">
+        <!--
+            对所有要使用声明式事务的方法，进行一一配置
+        -->
+        <tx:attributes>
+            <!--
+                对transfer方法，进行事务规则的配置
+                name就是方法名,
+                    rollback-for表示遇到什么就回滚
+                    no-rollback-for表示遇到什么不回滚
+                    timeout表示事务超时时间
+                    read-only表示该事务是否是只读事务，这通常用于查询方法上面，在该事务中就不能执行增删改
+                    isolation表示事务的隔离级别，一般不用设置，就使用默认的隔离级别
+                        read-uncommitted 读取到未提交
+                        read-committed 读取到已提交(Oracle数据库的默认隔离级别)
+                        repeatable-read 可重复读(mysql的默认隔离级别)
+                        Serializable 串行化(最高的隔离级别)
+
+                    propagation 表示事务的传播行为，一般不用设置，就使用默认的
+            -->
+            <tx:method name="transfer"
+                       rollback-for="java.lang.Exception"
+                       no-rollback-for="java.lang.NullPointerException"
+                       read-only="false"
+                       isolation="REPEATABLE_READ"
+                       propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--
+        进行aop的配置
+    -->
+    <aop:config>
+        <!--配置切入点，表示AccountServiceImpl类-->
+        <aop:pointcut id="pt1" expression="execution(* com.itheima.service.impl.AccountServiceImpl.*(..))"/>
+
+        <!--
+            关联切入点和事务规则
+        -->
+        <aop:advisor advice-ref="ad1" pointcut-ref="pt1"></aop:advisor>
+    </aop:config>
+</beans>
